@@ -49,8 +49,27 @@ Predictive analytics for telecom customer retention:
 
 ---
 
-### 3. 🏠 Housing Regression (In Progress)
-Deeper dive into regression techniques using Decision Trees and advanced models.
+### 3. 🏠 [Housing Price Prediction](./3-housing-regression/)
+**Status:** ✅ Complete
+
+Regression analysis demonstrating Decision Tree Regressor vs Linear Regression:
+- California Housing Dataset (20,640 properties)
+- Predicting median house prices from geographic & structural features
+
+**Key Topics:**
+- Decision Tree Regressor (continuous prediction)
+- Regression evaluation metrics (R², RMSE, MAE)
+- Regressor vs Classifier differences
+- Feature importance for real estate
+- Linear vs non-linear relationships
+
+**Performance Highlights:**
+- Decision Tree captures non-linear price patterns
+- Geographic splits reveal premium areas
+- Feature importance shows Median Income drives prices
+- Comparison with Linear Regression shows tree advantages
+
+[→ Read full project details](./3-housing-regression/hr_readme.md)
 
 ---
 

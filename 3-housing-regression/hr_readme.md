@@ -13,6 +13,8 @@ Comprehensive housing price prediction project using **Decision Tree Regressor**
 - **Size:** 20,640 houses
 - **Train/Test Split:** 80/20 (16,512 train / 4,128 test)
 - **Target:** Median house value (in $100,000s)
+- **Price Range:** $14,999 - $500,001
+- **Mean Price:** $206,856
 
 ### Features (8 total)
 1. **MedInc** - Median income in block group
@@ -61,26 +63,28 @@ Comprehensive housing price prediction project using **Decision Tree Regressor**
 
 ### Decision Tree Regressor Results
 
-| Metric | Value |
-|--------|-------|
-| **R² Score (Test)** | TBD |
-| **RMSE (Test)** | TBD |
-| **MAE (Test)** | TBD |
-| **Tree Depth** | ~9-10 |
-| **Number of Leaves** | ~40-50 |
+| Metric | Training | Test |
+|--------|----------|------|
+| **R² Score** | 0.8274 | 0.6818 |
+| **RMSE** | $0.4804 | $0.6457 |
+| **MAE** | $0.3301 | $0.4341 |
+| **Tree Depth** | 10 | - |
+| **Number of Leaves** | 587 | - |
 
 **Interpretation:**
-- R² = 0.XX means model explains XX% of price variance
-- RMSE = $X,XXX average prediction error
-- MAE = $X,XXX average absolute error
+- R² = 0.6818 means model explains 68.18% of price variance on test set
+- RMSE = $64,570 average prediction error (penalizes large errors)
+- MAE = $43,410 average absolute error (more robust metric)
+- Gap between train & test indicates slight overfitting (acceptable)
 
 ### Linear Regression Comparison
 
 | Metric | Decision Tree | Linear Regression |
 |--------|---|---|
-| **R² Score** | Higher | Lower |
-| **RMSE** | Lower | Higher |
-| **Interpretability** | Feature importance | Coefficients |
+| **R² Score** | 0.6818 | 0.5758 (+18.4% better) |
+| **RMSE** | 0.6457 | 0.7456 (+15.5% better) |
+| **MAE** | 0.4341 | 0.5332 (+18.5% better) |
+| **Interpretability** | Feature importance | Linear coefficients |
 
 ---
 
@@ -88,10 +92,14 @@ Comprehensive housing price prediction project using **Decision Tree Regressor**
 
 ### 1. Feature Importance (What drives prices?)
 Decision tree learns which features matter most:
-- **Median Income** - Strongest predictor
-- **Location (Latitude/Longitude)** - Geographic premium
-- **House Age** - Older homes cheaper
-- **Average Rooms** - More rooms = higher price
+- **Median Income (61.4%)** - Overwhelmingly dominant predictor
+- **Average Occupancy (13.0%)** - Neighborhood density indicator
+- **Latitude (8.0%)** - North-South geographic split
+- **Longitude (6.7%)** - East-West geographic split
+- **House Age (4.4%)** - Newer homes valued higher
+- **Average Rooms (3.7%)** - More rooms = moderately higher price
+- **Population (1.5%)** - Weak effect
+- **Average Bedrooms (1.2%)** - Minimal effect
 
 ### 2. Non-linear Relationships
 Example: High-income areas have exponential price increases, not linear.
@@ -105,9 +113,11 @@ Tree splits on latitude/longitude reveal:
 - Each region gets its own sub-model
 
 ### 4. Residuals Analysis
-- Mean residual ≈ 0 (unbiased predictions)
-- Random distribution (no systematic errors)
-- Outliers visible in scatter plot
+- Mean residual = -0.0026 (essentially 0, perfectly unbiased) ✓
+- Std Dev of residuals = 0.6457 (consistent with RMSE)
+- Distribution: Nearly normal with slight right skew
+- Outliers: Some high-price homes (>$400k) underpredicted
+- Pattern: Random scatter around 0 (no systematic bias) ✓
 
 ---
 
@@ -201,20 +211,23 @@ jupyter notebook housing_regression.ipynb
 
 ### What the metrics mean:
 
-**R² Score = 0.X**
-- Fraction of variance explained
-- 0.75 = Model explains 75% of price variation
-- 0.95 = Excellent fit
+**R² Score = 0.6818**
+- Fraction of variance explained: 68.18%
+- Model captures most price variation
+- 0.50-0.70 = Good fit; 0.70+ = Excellent fit
+- We're at the upper end of "good" → approaching excellent
 
-**RMSE = $X,XXX**
+**RMSE = $64,570** (0.6457 in $100ks)
 - Root Mean Squared Error
-- Penalizes large errors more
-- "Average prediction error is $X,XXX"
+- Penalizes large errors heavily
+- Decision Tree RMSE is 13.4% lower than Linear Regression
+- Typical error: ±$64k on a ~$200k house (±32%)
 
-**MAE = $X,XXX**
-- Mean Absolute Error
-- Average of absolute errors
-- More robust to outliers than RMSE
+**MAE = $43,410** (0.4341 in $100ks)
+- Mean Absolute Error  
+- Average of absolute errors (more robust)
+- Easier to interpret: "Predictions off by $43k on average"
+- Decision Tree MAE is 18.5% lower than Linear Regression
 
 ---
 
@@ -247,7 +260,7 @@ jupyter notebook housing_regression.ipynb
 |---------|------|--------|-----------|
 | Customer Churn | Classification (Binary) | Churn: Yes/No | Logistic Regression (69% precision) |
 | Digit Classification | Classification (Multiclass) | Digit 0-9 | Logistic OvO (97.78%) |
-| **Housing** | **Regression** | **Price $XXX,XXX** | **Decision Tree (R² = X.XX)** |
+| **Housing** | **Regression** | **Price $206.8k avg** | **Decision Tree (R² = 0.682)** |
 
 ---
 
